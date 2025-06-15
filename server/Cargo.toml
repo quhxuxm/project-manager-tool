@@ -1,0 +1,13 @@
+[package]
+name = "server"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+axum = { workspace = true, features = ["tokio"] }
+tokio = { workspace = true, features = ["full"] }
+thiserror = { workspace = true }
+anyhow = { workspace = true, features = ["backtrace"] }
+serde = { workspace = true, features = ["derive"] }
+chrono = { workspace = true, features = ["serde"] }
+sqlx = { workspace = true, features = ["runtime-tokio", "sqlite"] }
