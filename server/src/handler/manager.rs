@@ -8,8 +8,7 @@ use std::sync::Arc;
 pub async fn create_manager(
     Extension(server_state): Extension<Arc<ServerState>>,
 ) -> Result<Json<CreateManagerResponse>, Error> {
-    let mut db_connection = server_state.db_connection_pool.acquire().await?;
-    db_connection.begin().await?;
+    server_state.db_connection_pool.begin().await?;
     let user = User {
         id: 0,
         username: "".to_string(),
@@ -17,8 +16,13 @@ pub async fn create_manager(
         create_date: Default::default(),
         role: Role::Manager,
     };
-    sqlx::query_with::<_, User>("select * from manager", user)
-        .execute(&mut db_connection)
+    sqlx::query(r#"INSERT INTO tb_manager (
+                                id, username, password, create_date, role
+                            ) VALUES (
+                                $1, $2, $3, $4, $5
+                            )"#)
+        .bind(user.id).bind(user.username).bind(user.password).bind(user.create_date).bind(user.role)
+        .execute(&server_state.db_connection_pool)
         .await?;
     todo!()
 }
