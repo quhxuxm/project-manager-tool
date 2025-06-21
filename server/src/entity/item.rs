@@ -2,7 +2,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Item {
-    id: u64,
+    id: u32,
     name: String,
     description: String,
     create_date: DateTime<Utc>,

@@ -1,4 +1,4 @@
-use sqlx::{Pool, Sqlite};
+use sqlx::{MySql, Pool};
 pub struct ServerState {
-    pub db_connection_pool: Pool<Sqlite>,
+    pub connection_pool: Pool<MySql>,
 }

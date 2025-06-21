@@ -1,14 +1,15 @@
 use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize)]
-pub struct CreateManagerRequest {
-    pub name: String,
+pub struct CreateUserRequest {
+    pub username: String,
     pub password: String,
+    pub roles: Vec<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct CreateEngineerRequest {
+pub struct CreateRoleRequest {
     pub name: String,
-    pub password: String,
+    pub description: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

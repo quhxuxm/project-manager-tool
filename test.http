@@ -1,0 +1,112 @@
+### Create user role
+POST http://localhost:8080/roles
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "user",
+  "description": "The role of user"
+}
+
+###
+
+### Create manager role
+POST http://localhost:8080/roles
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "manager",
+  "description": "The role of manager"
+}
+
+###
+
+### Create admin role
+POST http://localhost:8080/roles
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "admin",
+  "description": "The role of admin"
+}
+
+###
+
+### Create root user
+POST http://localhost:8080/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "root",
+  "password": "root",
+  "roles": [
+    "user",
+    "manager",
+    "admin"
+  ]
+}
+
+###
+
+### Create normal user
+POST http://localhost:8080/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "user1",
+  "password": "user1",
+  "roles": [
+    "user"
+  ]
+}
+
+###
+
+### Create normal user
+POST http://localhost:8080/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "user2",
+  "password": "user2",
+  "roles": [
+    "user"
+  ]
+}
+
+###
+
+### Create manager user
+POST http://localhost:8080/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "manager1",
+  "password": "manager1",
+  "roles": [
+    "manager"
+  ]
+}
+
+###
+
+### Create manager user
+POST http://localhost:8080/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "manager2",
+  "password": "manager2",
+  "roles": [
+    "manager"
+  ]
+}
+
+###
