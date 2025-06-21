@@ -35,13 +35,23 @@ impl RoleDao<MySql> {
         })
     }
 
-    pub async fn find<'c, 'a, T, N>(executor: T, names: N) -> Result<Vec<RoleEntity>, Error>
+    pub async fn find_by_names<'c, 'a, T, N>(
+        executor: T,
+        names: N,
+    ) -> Result<Vec<RoleEntity>, Error>
     where
         T: Executor<'c, Database = MySql>,
         N: Iterator<Item = &'a str>,
     {
-        let mut roles_sql_builder =
-            QueryBuilder::<MySql>::new("SELECT * FROM tb_roles WHERE name in");
+        let mut roles_sql_builder = QueryBuilder::<MySql>::new(
+            r#"
+                    SELECT 
+                        * 
+                    FROM 
+                        tb_roles 
+                    WHERE name in
+                "#,
+        );
         roles_sql_builder.push_tuples(names, |mut bind, item| {
             bind.push_bind(item);
         });

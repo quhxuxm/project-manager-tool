@@ -110,3 +110,8 @@ Accept: application/json
 }
 
 ###
+
+### Find user
+GET http://localhost:8080/users/root
+
+###
