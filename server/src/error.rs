@@ -1,5 +1,3 @@
-use axum::http::StatusCode;
-use axum::response::{IntoResponse, Response};
 use thiserror::Error;
 #[derive(Error, Debug)]
 pub enum Error {
@@ -7,12 +5,10 @@ pub enum Error {
     Db(#[from] sqlx::Error),
 }
 
-impl IntoResponse for Error {
-    fn into_response(self) -> Response {
-        (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Error response: {}", self),
-        )
-            .into_response()
+impl From<Error> for u32 {
+    fn from(e: Error) -> u32 {
+        match e {
+            Error::Db(_) => 1,
+        }
     }
 }
