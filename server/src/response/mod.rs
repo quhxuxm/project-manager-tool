@@ -1,9 +1,11 @@
+mod organization;
 mod role;
 mod user;
 use crate::error::Error;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use axum::Json;
+pub use organization::*;
 pub use role::*;
 use serde::{Deserialize, Serialize};
 pub use user::*;

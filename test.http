@@ -1,5 +1,5 @@
 ### Create user role
-POST http://localhost:8080/roles
+POST http://localhost:8080/role
 Content-Type: application/json
 Accept: application/json
 
@@ -8,10 +8,9 @@ Accept: application/json
   "description": "The role of user"
 }
 
-###
 
 ### Create manager role
-POST http://localhost:8080/roles
+POST http://localhost:8080/role
 Content-Type: application/json
 Accept: application/json
 
@@ -20,22 +19,31 @@ Accept: application/json
   "description": "The role of manager"
 }
 
-###
 
-### Create admin role
-POST http://localhost:8080/roles
+### Create sys admin role
+POST http://localhost:8080/role
 Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "admin",
-  "description": "The role of admin"
+  "name": "sys-admin",
+  "description": "The role of sys admin"
 }
 
-###
+
+### Create org admin role
+POST http://localhost:8080/role
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "org-admin",
+  "description": "The role of org admin"
+}
+
 
 ### Create root user
-POST http://localhost:8080/users
+POST http://localhost:8080/user
 Content-Type: application/json
 Accept: application/json
 
@@ -45,14 +53,14 @@ Accept: application/json
   "roles": [
     "user",
     "manager",
-    "admin"
+    "sys-admin",
+    "org-admin"
   ]
 }
 
-###
 
 ### Create normal user
-POST http://localhost:8080/users
+POST http://localhost:8080/user
 Content-Type: application/json
 Accept: application/json
 
@@ -64,10 +72,10 @@ Accept: application/json
   ]
 }
 
-###
+
 
 ### Create normal user
-POST http://localhost:8080/users
+POST http://localhost:8080/user
 Content-Type: application/json
 Accept: application/json
 
@@ -79,10 +87,9 @@ Accept: application/json
   ]
 }
 
-###
 
 ### Create manager user
-POST http://localhost:8080/users
+POST http://localhost:8080/user
 Content-Type: application/json
 Accept: application/json
 
@@ -94,10 +101,9 @@ Accept: application/json
   ]
 }
 
-###
 
 ### Create manager user
-POST http://localhost:8080/users
+POST http://localhost:8080/user
 Content-Type: application/json
 Accept: application/json
 
@@ -109,9 +115,30 @@ Accept: application/json
   ]
 }
 
-###
 
 ### Find user
-GET http://localhost:8080/users/root
+GET http://localhost:8080/user/root
 
-###
+### Authenticate
+
+POST http://localhost:8080/auth
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "root",
+  "password": "root"
+}
+
+
+### Create org
+
+POST http://localhost:8080/org
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJyb2xlcyI6WyJ1c2VyIiwibWFuYWdlciIsInN5cy1hZG1pbiIsIm9yZy1hZG1pbiJdLCJleHAiOjE3NTA1Nzc2OTMsIm9yZ2FuaXphdGlvbiI6bnVsbH0.TfsTyvD-ehJVWvXn08w2yf3uTi4xB1vvaLwVITPAt9k
+
+{
+  "name": "ORG-1",
+  "description": "ORG-1"
+}

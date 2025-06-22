@@ -1,71 +1,64 @@
-use crate::dao::role::RoleDao;
-use crate::dao::user::UserDao;
-use crate::dao::user_role::UserRoleDao;
-use crate::entity::{CreateUserEntity, CreateUserRoleEntity};
-use crate::error::Error;
-use crate::request::CreateUserRequest;
-use crate::response::{CreateUserResponse, FindUserResponse};
+use crate::config::CONFIG;
+use crate::error::{Error, SecurityError};
+use crate::request::{AuthenticateRequest, CreateUserRequest};
+use crate::response::{AuthenticateResponse, CreateUserResponse, FindUserResponse};
+use crate::security::SecurityInfo;
+use crate::service::UserService;
 use crate::state::ServerState;
 use axum::extract::Path;
 use axum::{Extension, Json};
 use axum_macros::debug_handler;
+use chrono::{TimeDelta, Timelike, Utc};
+use jsonwebtoken::{encode, EncodingKey, Header};
+use std::ops::Add;
 use std::sync::Arc;
-#[axum_macros::debug_handler]
+use tracing::debug;
+#[debug_handler]
 pub async fn create_user(
     Extension(server_state): Extension<Arc<ServerState>>,
     Json(create_user_request): Json<CreateUserRequest>,
 ) -> Result<Json<CreateUserResponse>, Error> {
-    let mut txn = server_state.connection_pool.begin().await?;
-    let user = CreateUserEntity {
-        username: create_user_request.username,
-        password: create_user_request.password,
-    };
-    let user = UserDao::save(&mut *txn, user).await?;
-    let roles = RoleDao::find_by_names(
-        &mut *txn,
-        create_user_request.roles.iter().map(|item| item.as_str()),
-    )
-    .await?;
-    let mut roles_in_response = Vec::new();
-    for role in roles.into_iter() {
-        let create_user_role = CreateUserRoleEntity {
-            user_id: user.id,
-            role_id: role.id,
-        };
-        UserRoleDao::save(&mut *txn, create_user_role).await?;
-        roles_in_response.push(role.name);
-    }
-    txn.commit().await?;
-    Ok(Json(CreateUserResponse {
-        id: user.id,
-        username: user.username,
-        create_date: user.create_date,
-        roles: roles_in_response,
-    }))
+    let create_user_response =
+        UserService::save(&server_state.connection_pool, create_user_request).await?;
+    Ok(Json(create_user_response))
 }
-
 #[debug_handler]
 pub async fn find_user(
     Extension(server_state): Extension<Arc<ServerState>>,
     Path(username): Path<String>,
 ) -> Result<Json<FindUserResponse>, Error> {
-    let user_with_role_name_entities =
-        UserDao::find_with_role_name_by_username(&server_state.connection_pool, &username).await?;
-    let first_user = user_with_role_name_entities
-        .first()
-        .ok_or(Error::UserNotFound(username.to_string()))?;
-    let user_id = first_user.id;
-    let username = first_user.username.clone();
-    let create_date = first_user.create_date;
-    let mut roles = Vec::new();
-    user_with_role_name_entities
-        .into_iter()
-        .for_each(|role| roles.push(role.role_name));
-    let response = FindUserResponse {
-        id: user_id,
-        username,
-        create_date,
-        roles,
-    };
+    let response =
+        UserService::find_user_and_role(&server_state.connection_pool, &username).await?;
     Ok(Json(response))
+}
+
+#[debug_handler]
+pub async fn authenticate(
+    Extension(server_state): Extension<Arc<ServerState>>,
+    Json(AuthenticateRequest { username, password }): Json<AuthenticateRequest>,
+) -> Result<Json<AuthenticateResponse>, Error> {
+    let find_user_response =
+        UserService::find_user_and_role(&server_state.connection_pool, &username).await?;
+    if find_user_response.password != password {
+        return Err(Error::Security(SecurityError::Authentication));
+    }
+    let expired_at = Utc::now();
+    let expired_at = expired_at.add(TimeDelta::seconds(CONFIG.jwt_expiration_time));
+    debug!("Security info expired at: {:?}", expired_at);
+    let security_info = SecurityInfo {
+        username,
+        roles: find_user_response.roles,
+        exp: expired_at.timestamp(),
+        organization: None,
+    };
+    debug!("Generated security info: {:?}", security_info);
+    let authentication_token = encode(
+        &Header::default(),
+        &security_info,
+        &EncodingKey::from_secret(CONFIG.jwt_secret.as_bytes()),
+    )
+    .map_err(|e| Error::Security(SecurityError::GenerateToken))?;
+    Ok(Json(AuthenticateResponse {
+        authentication_token,
+    }))
 }

@@ -1,4 +1,4 @@
-use crate::entity::{CreateRoleEntity, RoleEntity};
+use crate::entity::{CreateRoleEntity, RoleEntity, RoleName};
 use crate::error::Error;
 use chrono::Utc;
 use sqlx::{Database, Executor, MySql, QueryBuilder};
@@ -41,7 +41,7 @@ impl RoleDao<MySql> {
     ) -> Result<Vec<RoleEntity>, Error>
     where
         T: Executor<'c, Database = MySql>,
-        N: Iterator<Item = &'a str>,
+        N: Iterator<Item = RoleName>,
     {
         let mut roles_sql_builder = QueryBuilder::<MySql>::new(
             r#"

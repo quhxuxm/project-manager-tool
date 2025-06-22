@@ -32,7 +32,19 @@ impl UserDao<MySql> {
         })
     }
 
-    pub async fn find_with_role_name_by_username<'c, T>(
+    pub async fn find_user<'c, T>(executor: T, username: &str) -> Result<UserEntity, Error>
+    where
+        T: Executor<'c, Database = MySql>,
+    {
+        let user =
+            sqlx::query_as::<MySql, UserEntity>(r#"SELECT * FROM tb_users WHERE username = ?"#)
+                .bind(username)
+                .fetch_one(executor)
+                .await?;
+        Ok(user)
+    }
+
+    pub async fn find_user_and_role<'c, T>(
         executor: T,
         username: &str,
     ) -> Result<Vec<UserWithRoleNameEntity>, Error>

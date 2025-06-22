@@ -4,5 +4,7 @@ mod comment;
 mod item;
 mod user;
 pub use user::*;
+mod organization;
+pub use organization::*;
 mod user_role;
 pub use user_role::*;

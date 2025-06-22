@@ -1,3 +1,4 @@
+use crate::entity::RoleName;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
@@ -20,5 +21,5 @@ pub struct UserWithRoleNameEntity {
     pub username: String,
     pub password: String,
     pub create_date: DateTime<Utc>,
-    pub role_name: String,
+    pub role_name: RoleName,
 }
