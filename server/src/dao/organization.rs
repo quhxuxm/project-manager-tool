@@ -11,6 +11,22 @@ where
 }
 
 impl OrganizationDao<MySql> {
+    pub async fn find_by_user<'c, E>(
+        connection_pool: E,
+        user_id: u64,
+    ) -> Result<Vec<OrganizationEntity>, Error>
+    where
+        E: Executor<'c, Database = MySql>,
+    {
+        let org_entities = sqlx::query_as::<MySql, OrganizationEntity>(
+            r#"SELECT * FROM tb_organizations WHERE creator_id = ?"#,
+        )
+        .bind(user_id)
+        .fetch_all(connection_pool)
+        .await?;
+        Ok(org_entities)
+    }
+
     pub async fn save<'c, E>(
         executor: E,
         organization: CreateOrganizationEntity,

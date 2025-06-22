@@ -1,6 +1,6 @@
 use crate::error::Error;
 use crate::request::CreateOrganizationRequest;
-use crate::response::CreateOrganizationResponse;
+use crate::response::OrganizationResponse;
 use crate::security::SecurityInfo;
 use crate::service::OrganizationService;
 use crate::state::ServerState;
@@ -13,7 +13,7 @@ pub async fn create_organization(
     Extension(server_state): Extension<Arc<ServerState>>,
     security_info: SecurityInfo,
     Json(create_organization_request): Json<CreateOrganizationRequest>,
-) -> Result<Json<CreateOrganizationResponse>, Error> {
+) -> Result<Json<OrganizationResponse>, Error> {
     debug!("Receive security info: {:?}", security_info);
     debug!("Create organization: {:?}", create_organization_request);
     let create_org_response = OrganizationService::save(

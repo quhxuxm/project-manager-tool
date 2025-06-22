@@ -4,4 +4,4 @@ database_connection_pool_min_size = 5
 database_test_before_acquire = true
 listening_address = "0.0.0.0:8080"
 jwt_secret = "1a2b3c4d"
-jwt_expiration_time = 3600
+jwt_expiration_time = 360000
