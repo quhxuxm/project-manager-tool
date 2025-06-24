@@ -136,7 +136,7 @@ Accept: application/json
 POST http://localhost:8080/org
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJyb2xlcyI6WyJ1c2VyIiwibWFuYWdlciIsInN5cy1hZG1pbiIsIm9yZy1hZG1pbiJdLCJleHAiOjE3NTA1Nzc2OTMsIm9yZ2FuaXphdGlvbiI6bnVsbH0.TfsTyvD-ehJVWvXn08w2yf3uTi4xB1vvaLwVITPAt9k
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJyb2xlcyI6WyJ1c2VyIiwibWFuYWdlciIsInN5cy1hZG1pbiIsIm9yZy1hZG1pbiJdLCJleHAiOjE3NTEwOTU1MjMsIm9yZ2FuaXphdGlvbiI6bnVsbH0.zCVoyFVerfoVyYm_Y9SRO3qTiVltqEW9IeQl5iMAhJs
 
 {
   "name": "ORG-1",

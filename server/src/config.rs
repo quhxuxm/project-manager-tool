@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::io::Read;
 use std::net::SocketAddr;
 use std::sync::LazyLock;
-static DEFAULT_CONFIG_FILE: &str = "config.toml";
+static DEFAULT_CONFIG_FILE: &str = "server-config.toml";
 pub static CONFIG: LazyLock<Config> = LazyLock::new(|| {
     let mut config_file =
         std::fs::File::open(DEFAULT_CONFIG_FILE).expect("Failed to open config file");

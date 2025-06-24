@@ -53,7 +53,7 @@ impl RoleDao<MySql> {
                 "#,
         );
         roles_sql_builder.push_tuples(names, |mut bind, item| {
-            bind.push_bind(item);
+            bind.push_bind(item as u32);
         });
         let roles_sql = roles_sql_builder.build_query_as::<RoleEntity>();
         let roles = roles_sql.fetch_all(executor).await?;
